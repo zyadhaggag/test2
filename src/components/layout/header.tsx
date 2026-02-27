@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 import { useChatStore } from '@/stores/chat-store';
 import { useFavoritesStore } from '@/stores/favorites-store';
+import { useTranslation } from '@/stores/dialect-store';
 
 const drawerLinks = [
     { href: '/', label: 'الرئيسية', icon: Home },
@@ -20,6 +21,7 @@ const drawerLinks = [
 ];
 
 export function Header() {
+    const { t } = useTranslation();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -111,7 +113,7 @@ export function Header() {
                             <Link
                                 href="/favorites"
                                 className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
-                                title="المفضلة"
+                                title={t('favorites')}
                             >
                                 <Heart size={22} />
                             </Link>
@@ -132,7 +134,7 @@ export function Header() {
                             )}
 
                             {!isAuthenticated && (
-                                <Link href="/auth/login" className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra" title="تسجيل الدخول">
+                                <Link href="/auth/login" className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra" title={t('login')}>
                                     <User size={20} />
                                 </Link>
                             )}
@@ -140,7 +142,7 @@ export function Header() {
                             <Link
                                 href="/cart"
                                 className="relative p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
-                                title="السلة"
+                                title={t('cart')}
                             >
                                 <ShoppingBasket size={20} />
                                 {isMounted && cartItemCount > 0 && (
@@ -222,7 +224,7 @@ export function Header() {
                                 ) : (
                                     <LogOut size={18} />
                                 )}
-                                تسجيل الخروج
+                                {t('logout')}
                             </button>
                         </div>
                     ) : (
@@ -232,7 +234,7 @@ export function Header() {
                             className="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold bg-ultra-surface border border-ultra-border text-ultra-silver-bright rounded-xl hover:bg-ultra-card hover:shadow-glow transition-all duration-ultra"
                         >
                             <LogIn size={18} />
-                            تسجيل الدخول
+                            {t('login')}
                         </Link>
                     )}
                 </div>
@@ -247,7 +249,7 @@ export function Header() {
                             <input
                                 autoFocus
                                 type="text"
-                                placeholder="ابحث عن منتجات، خدمات، العروض..."
+                                placeholder={`${t('search')} عن منتجات، خدمات، العروض...`}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full bg-ultra-surface border border-ultra-border text-white text-xl rounded-2xl pr-14 pl-14 py-6 focus:border-ultra-silver-muted outline-none transition-all shadow-ultra"
@@ -266,7 +268,7 @@ export function Header() {
                                     onClick={() => setSearchOpen(false)}
                                     className="inline-flex items-center gap-2 px-8 py-4 bg-ultra-silver-bright text-ultra-bg font-extrabold rounded-xl hover:bg-white transition-all shadow-glow text-lg"
                                 >
-                                    عرض النتائج لـ "{searchQuery}"
+                                    عرض النتائج لـ &quot;{searchQuery}&quot;
                                 </Link>
                             </div>
                         )}

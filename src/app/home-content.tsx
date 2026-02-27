@@ -225,7 +225,7 @@ function ProductSlider({ title, desc, products, link }: { title: string, desc?: 
         }, 2200);
 
         return () => clearInterval(interval);
-    }, [products.length]);
+    }, [products]);
 
     if (!products || products.length === 0) return null;
 

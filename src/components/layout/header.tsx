@@ -1,0 +1,278 @@
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Menu, X, User, ShoppingBasket, Home, Gamepad2, Code, Palette, Dumbbell, Gift, Tag, LogIn, LogOut, LayoutDashboard, MessageCircle, Search, Heart } from 'lucide-react';
+import { useAuthStore } from '@/stores/auth-store';
+import { useCartStore } from '@/stores/cart-store';
+import { useChatStore } from '@/stores/chat-store';
+import { useFavoritesStore } from '@/stores/favorites-store';
+
+const drawerLinks = [
+    { href: '/', label: 'الرئيسية', icon: Home },
+    { href: '/category/games', label: 'ألعاب وحسابات', icon: Gamepad2 },
+    { href: '/category/programming', label: 'برمجة', icon: Code },
+    { href: '/category/design', label: 'تصاميم', icon: Palette },
+    { href: '/category/sports', label: 'رياضة', icon: Dumbbell },
+    { href: '/category/free', label: 'مجاني من ألترا', icon: Gift },
+    { href: '/offers', label: 'العروض', icon: Tag },
+];
+
+export function Header() {
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const { user, isAuthenticated, initialize, signOut } = useAuthStore();
+    const cartItemCount = useCartStore((s) => s.getItemCount());
+    const openChat = useChatStore((s) => s.openChat);
+    const [isMounted, setIsMounted] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const fetchFavorites = useFavoritesStore(s => s.fetchFavorites);
+    const clearFavorites = useFavoritesStore(s => s.clearFavorites);
+
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        await signOut();
+        setIsLoggingOut(false);
+        setDrawerOpen(false);
+    };
+
+    useEffect(() => {
+        setIsMounted(true);
+        initialize();
+    }, [initialize]);
+
+    useEffect(() => {
+        if (user?.id) {
+            fetchFavorites(user.id);
+        } else {
+            clearFavorites();
+        }
+    }, [user?.id, fetchFavorites, clearFavorites]);
+
+    // Close drawer on Escape
+    useEffect(() => {
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setDrawerOpen(false);
+                setSearchOpen(false);
+            }
+        };
+        document.addEventListener('keydown', handleEsc);
+        return () => document.removeEventListener('keydown', handleEsc);
+    }, []);
+
+    // Prevent scroll when drawer or search open
+    useEffect(() => {
+        if (drawerOpen || searchOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [drawerOpen, searchOpen]);
+
+    return (
+        <>
+            {/* Mobile Header - Visible only on mobile */}
+            <header className="sm:hidden sticky top-0 z-50 glass-strong flex items-center justify-center p-4 shadow-ultra">
+                <Link href="/">
+                    <Image src="/imgs/logo/logo.png" alt="ULTRA" width={180} height={60} className="h-14 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" priority={true} />
+                </Link>
+            </header>
+
+            {/* Header Bar - Hidden on mobile, visible on sm and up */}
+            <header className="hidden sm:block sticky top-0 z-50 glass-strong py-2">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    <div className="flex items-center justify-between h-16">
+                        {/* LEFT: Hamburger */}
+                        <button
+                            onClick={() => setDrawerOpen(true)}
+                            className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
+                            aria-label="القائمة"
+                        >
+                            <Menu size={22} />
+                        </button>
+
+                        <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+                            <Image src="/imgs/logo/logo.png" alt="ULTRA" width={240} height={80} className="h-20 w-auto object-contain" priority={true} />
+                        </Link>
+
+                        {/* RIGHT: Login + Basket */}
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setSearchOpen(true)}
+                                className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
+                                title="البحث"
+                            >
+                                <Search size={22} />
+                            </button>
+                            <Link
+                                href="/favorites"
+                                className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
+                                title="المفضلة"
+                            >
+                                <Heart size={22} />
+                            </Link>
+                            {isAuthenticated && (
+                                <button
+                                    onClick={openChat}
+                                    className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
+                                    title="الدعم"
+                                >
+                                    <MessageCircle size={20} />
+                                </button>
+                            )}
+
+                            {isAuthenticated && user?.role === 'admin' && (
+                                <Link href="/admin" className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra" title="لوحة التحكم">
+                                    <LayoutDashboard size={20} />
+                                </Link>
+                            )}
+
+                            {!isAuthenticated && (
+                                <Link href="/auth/login" className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra" title="تسجيل الدخول">
+                                    <User size={20} />
+                                </Link>
+                            )}
+
+                            <Link
+                                href="/cart"
+                                className="relative p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
+                                title="السلة"
+                            >
+                                <ShoppingBasket size={20} />
+                                {isMounted && cartItemCount > 0 && (
+                                    <span className="absolute -top-0.5 -left-0.5 w-4 h-4 rounded-full bg-ultra-silver-bright text-ultra-bg text-[10px] font-bold flex items-center justify-center">
+                                        {cartItemCount}
+                                    </span>
+                                )}
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            {/* Overlay */}
+            {drawerOpen && (
+                <div
+                    className="fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300"
+                    onClick={() => setDrawerOpen(false)}
+                />
+            )}
+
+            {/* Drawer */}
+            <aside
+                className={`fixed top-0 right-0 z-[70] h-full w-72 bg-ultra-bg-secondary border-l border-ultra-border shadow-ultra transform transition-transform duration-300 ease-in-out ${drawerOpen ? 'translate-x-0' : 'translate-x-full'
+                    }`}
+            >
+                <div className="flex items-center justify-between px-5 h-20 border-b border-ultra-border">
+                    <Image src="/imgs/logo/logo.png" alt="ULTRA" width={180} height={60} className="h-16 w-auto object-contain" />
+                    <button
+                        onClick={() => setDrawerOpen(false)}
+                        className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors sm:hidden"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* Drawer Links */}
+                <nav className="p-4 space-y-1 overflow-y-auto h-[calc(100%-64px-80px)]">
+                    {drawerLinks.map((link, i) => (
+                        <Link
+                            key={i}
+                            href={link.href}
+                            onClick={() => setDrawerOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3 text-sm text-ultra-silver-muted hover:text-ultra-silver-bright hover:bg-ultra-surface rounded-xl transition-all duration-ultra group"
+                        >
+                            <link.icon size={18} className="group-hover:scale-110 transition-transform" />
+                            {link.label}
+                        </Link>
+                    ))}
+                </nav>
+
+                {/* Drawer Footer */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-ultra-border bg-ultra-bg-secondary">
+                    {isAuthenticated ? (
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-3 px-4 py-2">
+                                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-ultra-border/50 bg-ultra-surface flex-shrink-0">
+                                    <Image src="/usr.svg" alt={user?.full_name || 'User'} fill className="object-cover" />
+                                </div>
+                                <span className="text-sm text-ultra-silver-bright font-medium truncate">{user?.full_name || 'مستخدم ألترا'}</span>
+                            </div>
+                            {user?.role === 'admin' && (
+                                <Link
+                                    href="/admin"
+                                    onClick={() => setDrawerOpen(false)}
+                                    className="hidden sm:flex items-center gap-3 px-4 py-2.5 text-sm text-ultra-silver-muted hover:text-ultra-silver-bright hover:bg-ultra-surface rounded-xl transition-all"
+                                >
+                                    <LayoutDashboard size={18} />
+                                    لوحة التحكم
+                                </Link>
+                            )}
+                            <button
+                                onClick={handleLogout}
+                                disabled={isLoggingOut}
+                                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-ultra-silver-muted hover:text-ultra-silver-bright hover:bg-ultra-surface rounded-xl transition-all"
+                            >
+                                {isLoggingOut ? (
+                                    <div className="w-[18px] h-[18px] rounded-full border-t-2 border-ultra-silver-bright animate-spin shrink-0"></div>
+                                ) : (
+                                    <LogOut size={18} />
+                                )}
+                                تسجيل الخروج
+                            </button>
+                        </div>
+                    ) : (
+                        <Link
+                            href="/auth/login"
+                            onClick={() => setDrawerOpen(false)}
+                            className="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold bg-ultra-surface border border-ultra-border text-ultra-silver-bright rounded-xl hover:bg-ultra-card hover:shadow-glow transition-all duration-ultra"
+                        >
+                            <LogIn size={18} />
+                            تسجيل الدخول
+                        </Link>
+                    )}
+                </div>
+            </aside>
+
+            {/* Search Overlay */}
+            {searchOpen && (
+                <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md animate-[fadeIn_0.2s_ease]">
+                    <div className="max-w-4xl mx-auto px-4 pt-32 pb-8">
+                        <div className="relative flex items-center">
+                            <Search className="absolute right-4 text-ultra-silver-dark" size={24} />
+                            <input
+                                autoFocus
+                                type="text"
+                                placeholder="ابحث عن منتجات، خدمات، العروض..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full bg-ultra-surface border border-ultra-border text-white text-xl rounded-2xl pr-14 pl-14 py-6 focus:border-ultra-silver-muted outline-none transition-all shadow-ultra"
+                            />
+                            <button
+                                onClick={() => setSearchOpen(false)}
+                                className="absolute left-4 p-2 text-ultra-silver-muted hover:text-white transition-colors bg-ultra-bg rounded-xl"
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
+                        {searchQuery && (
+                            <div className="mt-8 text-center animate-[fadeIn_0.3s_ease]">
+                                <Link
+                                    href={`/products?q=${encodeURIComponent(searchQuery)}`}
+                                    onClick={() => setSearchOpen(false)}
+                                    className="inline-flex items-center gap-2 px-8 py-4 bg-ultra-silver-bright text-ultra-bg font-extrabold rounded-xl hover:bg-white transition-all shadow-glow text-lg"
+                                >
+                                    عرض النتائج لـ "{searchQuery}"
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+        </>
+    );
+}

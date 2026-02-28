@@ -124,8 +124,8 @@ export default function PhoneLoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-ultra-bg px-4">
-            <div className="w-full max-w-md space-y-8">
+        <div className="min-h-[100dvh] bg-ultra-bg flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md mx-auto space-y-6">
                 {/* Logo & Header */}
                 <div className="text-center">
                     <Link href="/">

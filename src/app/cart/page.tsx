@@ -67,46 +67,48 @@ export default function CartPage() {
                                 {items.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="bg-ultra-card border border-ultra-border rounded-ultra p-4 flex gap-4 items-center transition-all hover:border-ultra-silver-dark/30"
+                                        className="bg-ultra-card border border-ultra-border rounded-ultra p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center transition-all hover:border-ultra-silver-dark/30 relative"
                                     >
-                                        {/* Product Image */}
-                                        <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-ultra-surface flex-shrink-0">
-                                            <Image
-                                                src={item.image}
-                                                alt={item.name}
-                                                fill
-                                                className="object-cover"
-                                            />
-                                        </div>
+                                        <div className="flex gap-3 items-center w-full sm:w-auto">
+                                            {/* Product Image */}
+                                            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-ultra-surface flex-shrink-0">
+                                                <Image src={item.image} alt={item.name} fill className="object-cover" />
+                                            </div>
 
-                                        {/* Product Info */}
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className=" font-bold text-sm text-ultra-silver-bright truncate">{item.name}</h3>
-                                            <div className="flex items-center gap-1 mt-1">
-                                                <span className="text-sm font-bold text-ultra-silver-bright">{item.price}</span>
-                                                <Image src="/ryal.svg" alt="ر.س" width={14} height={14} />
+                                            {/* Product Info */}
+                                            <div className="flex-1 min-w-0 pr-8 sm:pr-0">
+                                                <h3 className=" font-bold text-sm text-ultra-silver-bright line-clamp-2">{item.name}</h3>
+                                                <div className="flex items-center gap-1 mt-1">
+                                                    <span className="text-sm font-bold text-ultra-silver-bright">{item.price}</span>
+                                                    <Image src="/ryal.svg" alt="ر.س" width={12} height={12} className="sm:w-[14px] sm:h-[14px]" />
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Quantity */}
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-sm font-bold text-ultra-silver-muted px-3 py-1 bg-ultra-bg rounded-lg border border-ultra-border">
-                                                الكمية: 1
-                                            </span>
-                                        </div>
+                                        <div className="flex items-center justify-between sm:justify-end w-full sm:flex-1 gap-2 sm:gap-4 mt-1 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-0 border-ultra-border/50">
+                                            {/* Quantity */}
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs sm:text-sm font-bold text-ultra-silver-muted px-2 py-1 sm:px-3 bg-ultra-bg rounded-lg border border-ultra-border">
+                                                    الكمية: {item.quantity || 1}
+                                                </span>
+                                            </div>
 
-                                        {/* Subtotal */}
-                                        <div className="text-left min-w-[70px]">
-                                            <div className="flex items-center gap-1 justify-end">
-                                                <span className="text-sm font-bold text-ultra-silver-bright">{(item.price * item.quantity).toFixed(2)}</span>
-                                                <Image src="/ryal.svg" alt="ر.س" width={12} height={12} />
+                                            <div className="flex items-center gap-4">
+                                                {/* Subtotal */}
+                                                <div className="text-left">
+                                                    <div className="flex items-center gap-1 justify-end">
+                                                        <span className="text-sm sm:text-base font-bold text-ultra-silver-bright">{(item.price * (item.quantity || 1)).toFixed(2)}</span>
+                                                        <Image src="/ryal.svg" alt="ر.س" width={10} height={10} className="sm:w-[12px] sm:h-[12px]" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Remove */}
+                                        {/* Remove Component */}
                                         <button
                                             onClick={() => { removeItem(item.id); addNotification('success', 'تم حذف المنتج'); }}
-                                            className="p-2 text-ultra-silver-dark hover:text-ultra-silver-muted transition-colors"
+                                            className="absolute top-2 left-2 sm:static sm:top-auto sm:left-auto p-2 text-ultra-silver-dark hover:text-ultra-silver-muted transition-colors rounded-lg bg-ultra-surface sm:bg-transparent border sm:border-0 border-ultra-border"
+                                            aria-label="Remove item"
                                         >
                                             <Trash2 size={16} />
                                         </button>

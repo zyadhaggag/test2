@@ -16,6 +16,7 @@ export default function ProductDetailPage() {
     const { id } = useParams();
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isAdding, setIsAdding] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     const addItem = useCartStore((s) => s.addItem);
     const addNotification = useNotificationStore((s) => s.addNotification);
@@ -36,21 +37,25 @@ export default function ProductDetailPage() {
 
     const handleAddToCart = () => {
         if (!product) return;
-        addItem({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-        });
-        addNotification('success', 'تم إضافة المنتج إلى السلة');
+        setIsAdding(true);
+        setTimeout(() => {
+            addItem({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+            });
+            addNotification('success', 'تم إضافة المنتج إلى السلة');
+            setIsAdding(false);
+        }, 500);
     };
 
     if (loading) {
         return (
             <>
                 <Header />
-                <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 py-8">
-                    <div className="animate-pulse grid grid-cols-1 md:grid-cols-2 gap-10">
+                <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+                    <div className="animate-pulse grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
                         <div className="bg-ultra-card border border-ultra-border rounded-ultra aspect-square" />
                         <div className="space-y-4">
                             <div className="h-8 bg-ultra-card rounded w-3/4" />
@@ -80,7 +85,7 @@ export default function ProductDetailPage() {
     return (
         <>
             <Header />
-            <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 py-8">
+            <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 pb-32 sm:pb-8">
                 <button
                     onClick={() => window.history.back()}
                     className="flex items-center gap-2 text-sm text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors mb-6 group"
@@ -89,7 +94,7 @@ export default function ProductDetailPage() {
                     العودة
                 </button>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
                     <div className="relative aspect-square bg-ultra-card border border-ultra-border rounded-ultra overflow-hidden">
                         <Image
                             src={product.image}
@@ -165,10 +170,15 @@ export default function ProductDetailPage() {
                         <div className="flex items-center gap-3 pt-4">
                             <button
                                 onClick={handleAddToCart}
-                                className="flex-1 flex items-center justify-center gap-3 bg-ultra-surface border border-ultra-border text-ultra-silver-bright font-bold py-3.5 rounded-ultra transition-all duration-ultra hover:bg-ultra-card hover:shadow-glow"
+                                disabled={isAdding}
+                                className="flex-1 flex items-center justify-center gap-3 bg-ultra-surface border border-ultra-border text-ultra-silver-bright font-bold py-3.5 rounded-ultra transition-all duration-ultra hover:bg-ultra-card hover:shadow-glow disabled:opacity-50"
                             >
-                                <ShoppingCart size={18} />
-                                إضافة إلى السلة
+                                {isAdding ? (
+                                    <div className="w-[18px] h-[18px] rounded-full border-t-2 border-ultra-silver-bright animate-spin shrink-0"></div>
+                                ) : (
+                                    <ShoppingCart size={18} />
+                                )}
+                                {isAdding ? 'جاري الإضافة...' : 'إضافة إلى السلة'}
                             </button>
                             <button
                                 onClick={() => setIsFavorite(!isFavorite)}
@@ -180,6 +190,40 @@ export default function ProductDetailPage() {
                                 />
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                {/* Mobile Sticky Bottom Bar */}
+                <div className="fixed bottom-0 left-0 right-0 z-40 bg-ultra-bg-secondary/95 backdrop-blur-md border-t border-ultra-border p-4 sm:hidden flex items-center justify-between gap-4 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.5)] animate-[slideUp_0.3s_ease]">
+                    <div className="flex flex-col max-w-[40%]">
+                        <span className="text-xs text-ultra-silver-muted line-clamp-1">{product.name}</span>
+                        <div className="flex items-center gap-1">
+                            <span className="font-extrabold text-lg text-ultra-silver-bright">{product.price}</span>
+                            <Image src="/ryal.svg" alt="ريال" width={16} height={16} />
+                        </div>
+                    </div>
+                    <div className="flex gap-2 flex-1">
+                        <button
+                            onClick={() => setIsFavorite(!isFavorite)}
+                            className="w-12 h-12 shrink-0 rounded-xl bg-ultra-bg border border-ultra-border flex items-center justify-center transition-all duration-ultra hover:bg-ultra-surface"
+                        >
+                            <Heart
+                                size={18}
+                                className={isFavorite ? 'fill-ultra-silver-bright text-ultra-silver-bright' : 'text-ultra-silver-muted'}
+                            />
+                        </button>
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={isAdding}
+                            className="flex-1 shrink-0 flex items-center justify-center gap-2 bg-ultra-silver-bright text-ultra-bg font-bold px-4 rounded-xl transition-all duration-ultra hover:bg-white shadow-glow disabled:opacity-50"
+                        >
+                            {isAdding ? (
+                                <div className="w-4 h-4 rounded-full border-t-2 border-ultra-bg animate-spin shrink-0"></div>
+                            ) : (
+                                <ShoppingCart size={16} />
+                            )}
+                            {isAdding ? 'جاري الإضافة' : 'إضافة'}
+                        </button>
                     </div>
                 </div>
             </main>

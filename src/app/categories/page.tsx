@@ -44,10 +44,10 @@ export default function CategoriesPage() {
                             <Link
                                 key={cat.id}
                                 href={`/category/${cat.slug}`}
-                                className="group bg-ultra-card border border-ultra-border rounded-ultra p-8 text-center transition-all duration-ultra hover:shadow-glow hover:scale-[1.02] hover:border-ultra-silver-dark/40"
+                                className="group bg-ultra-card border border-ultra-border rounded-ultra p-4 sm:p-8 text-center transition-all duration-ultra hover:shadow-glow hover:scale-[1.02] hover:border-ultra-silver-dark/40"
                             >
                                 {cat.image && (
-                                    <div className="relative w-20 h-20 mx-auto mb-4">
+                                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4">
                                         <Image src={cat.image} alt={cat.name} fill className="object-contain" />
                                     </div>
                                 )}

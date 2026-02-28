@@ -51,7 +51,7 @@ export default function ProfilePage() {
                 {/* Profile Card */}
                 <div className="bg-ultra-surface p-6 rounded-3xl border border-ultra-border flex items-center gap-6 shadow-ultra">
                     <div className="relative w-20 h-20 rounded-full bg-ultra-card border border-ultra-border overflow-hidden shrink-0">
-                        <Image src={user?.avatar_url || '/usr.svg'} alt={user?.full_name || 'User'} fill className="object-cover p-3" />
+                        <Image src={user?.avatar_url || '/usr.jpg'} alt={user?.full_name || 'User'} fill className="object-cover rounded-full" unoptimized />
                     </div>
                     <div>
                         <h2 className="text-xl font-bold text-white mb-1">{user?.full_name || 'مستخدم ألترا'}</h2>

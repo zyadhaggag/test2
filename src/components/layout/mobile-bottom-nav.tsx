@@ -19,8 +19,8 @@ export function MobileBottomNav() {
         setIsMounted(true);
     }, []);
 
-    // Hide if admin route
-    if (pathname.startsWith('/admin')) {
+    // Hide if admin or auth route
+    if (pathname.startsWith('/admin') || pathname.startsWith('/auth')) {
         return null;
     }
 

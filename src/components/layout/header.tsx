@@ -78,10 +78,39 @@ export function Header() {
     return (
         <>
             {/* Mobile Header - Visible only on mobile */}
-            <header className="sm:hidden sticky top-0 z-50 glass-strong flex items-center justify-center p-4 shadow-ultra">
-                <Link href="/">
-                    <Image src="/imgs/logo/logo.png" alt="ULTRA" width={180} height={60} className="h-14 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" priority={true} />
+            <header className="sm:hidden sticky top-0 z-50 glass-strong flex items-center justify-between px-4 py-3 shadow-ultra">
+                {/* Right: Hamburger */}
+                <button
+                    onClick={() => setDrawerOpen(true)}
+                    className="p-2 text-ultra-silver-muted hover:text-white transition-colors"
+                    aria-label="القائمة"
+                >
+                    <Menu size={24} />
+                </button>
+
+                {/* Center: Logo */}
+                <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+                    <Image src="/imgs/logo/logo.png" alt="ULTRA" width={140} height={40} className="h-10 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" priority={true} />
                 </Link>
+
+                {/* Left: Actions */}
+                <div className="flex items-center gap-0.5">
+                    <button
+                        onClick={() => setSearchOpen(true)}
+                        className="p-1.5 text-ultra-silver-muted hover:text-white transition-colors"
+                        aria-label="البحث"
+                    >
+                        <Search size={20} />
+                    </button>
+                    <Link href="/favorites" className="p-1.5 text-ultra-silver-muted hover:text-white transition-colors">
+                        <Heart size={20} />
+                    </Link>
+                    {isAuthenticated && user?.role === 'admin' && (
+                        <Link href="/admin" className="p-1.5 text-ultra-silver-muted hover:text-white transition-colors">
+                            <LayoutDashboard size={20} />
+                        </Link>
+                    )}
+                </div>
             </header>
 
             {/* Header Bar - Hidden on mobile, visible on sm and up */}
@@ -200,7 +229,7 @@ export function Header() {
                         <div className="space-y-2">
                             <div className="flex items-center gap-3 px-4 py-2">
                                 <div className="relative w-8 h-8 rounded-full overflow-hidden border border-ultra-border/50 bg-ultra-surface flex-shrink-0">
-                                    <Image src="/usr.svg" alt={user?.full_name || 'User'} fill className="object-cover" />
+                                    <Image src="/usr.jpg" alt={user?.full_name || 'User'} fill className="object-cover rounded-full" unoptimized />
                                 </div>
                                 <span className="text-sm text-ultra-silver-bright font-medium truncate">{user?.full_name || 'مستخدم ألترا'}</span>
                             </div>

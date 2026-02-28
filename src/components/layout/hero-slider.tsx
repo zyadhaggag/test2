@@ -25,7 +25,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
     if (slides.length === 0) return null;
 
     return (
-        <div className="relative w-full rounded-[32px] overflow-hidden shadow-ultra" style={{ height: '320px' }}>
+        <div className="relative w-full rounded-[20px] sm:rounded-[32px] overflow-hidden shadow-ultra bg-ultra-surface aspect-[16/9] sm:aspect-auto sm:h-[350px] md:h-[420px]">
             {slides.map((slide, index) => (
                 <div
                     key={slide.id}
@@ -38,7 +38,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
                                 src={slide.image}
                                 alt={`Slide ${index + 1}`}
                                 fill
-                                className="object-cover"
+                                className="object-contain sm:object-cover"
                                 priority={index === 0}
                             />
                         </Link>
@@ -47,7 +47,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
                             src={slide.image}
                             alt={`Slide ${index + 1}`}
                             fill
-                            className="object-cover"
+                            className="object-contain sm:object-cover"
                             priority={index === 0}
                         />
                     )}

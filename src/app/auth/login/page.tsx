@@ -31,8 +31,8 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-ultra-bg px-4">
-            <div className="w-full max-w-md space-y-8">
+        <div className="min-h-[100dvh] bg-ultra-bg flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md mx-auto space-y-6">
                 <div className="text-center">
                     <Link href="/">
                         <Image src="/imgs/logo/logo.png" alt="ULTRA" width={160} height={50} className="mx-auto h-14 w-auto" />
@@ -41,7 +41,7 @@ export default function LoginPage() {
                     <p className="text-ultra-silver-muted mt-2 text-sm">مرحباً بعودتك</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="bg-ultra-card border border-ultra-border rounded-ultra p-8 space-y-6 shadow-ultra">
+                <form onSubmit={handleSubmit} className="bg-ultra-card border border-ultra-border rounded-ultra p-6 sm:p-8 space-y-6 shadow-ultra">
                     <div className="space-y-2">
                         <label className="block text-sm font-medium text-ultra-silver-muted">البريد الإلكتروني</label>
                         <input
@@ -74,6 +74,11 @@ export default function LoginPage() {
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
+                        </div>
+                        <div className="flex justify-end pt-1">
+                            <Link href="/auth/forgot-password" className="text-xs text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors">
+                                نسيت كلمة المرور؟
+                            </Link>
                         </div>
                     </div>
 

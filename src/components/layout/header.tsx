@@ -9,19 +9,21 @@ import { useCartStore } from '@/stores/cart-store';
 import { useChatStore } from '@/stores/chat-store';
 import { useFavoritesStore } from '@/stores/favorites-store';
 import { useTranslation } from '@/stores/dialect-store';
-
-const drawerLinks = [
-    { href: '/', label: 'الرئيسية', icon: Home },
-    { href: '/category/games', label: 'ألعاب وحسابات', icon: Gamepad2 },
-    { href: '/category/programming', label: 'برمجة', icon: Code },
-    { href: '/category/design', label: 'تصاميم', icon: Palette },
-    { href: '/category/sports', label: 'رياضة', icon: Dumbbell },
-    { href: '/category/free', label: 'مجاني من ألترا', icon: Gift },
-    { href: '/offers', label: 'العروض', icon: Tag },
-];
+import { useRouter } from 'next/navigation';
 
 export function Header() {
     const { t } = useTranslation();
+    const router = useRouter();
+
+    const drawerLinks = [
+        { href: '/', label: t('home'), icon: Home },
+        { href: '/category/games', label: 'ألعاب وحسابات', icon: Gamepad2 },
+        { href: '/category/programming', label: 'برمجة', icon: Code },
+        { href: '/category/design', label: 'تصاميم', icon: Palette },
+        { href: '/category/sports', label: 'رياضة', icon: Dumbbell },
+        { href: '/category/free', label: 'مجاني من ألترا', icon: Gift },
+        { href: '/offers', label: 'العروض', icon: Tag },
+    ];
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -32,6 +34,14 @@ export function Header() {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const fetchFavorites = useFavoritesStore(s => s.fetchFavorites);
     const clearFavorites = useFavoritesStore(s => s.clearFavorites);
+
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+            setSearchOpen(false);
+        }
+    };
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
@@ -274,15 +284,21 @@ export function Header() {
                 <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md animate-[fadeIn_0.2s_ease]">
                     <div className="max-w-4xl mx-auto px-4 pt-32 pb-8">
                         <div className="relative flex items-center">
-                            <Search className="absolute right-4 text-ultra-silver-dark" size={24} />
-                            <input
-                                autoFocus
-                                type="text"
-                                placeholder={`${t('search')} عن منتجات، خدمات، العروض...`}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-ultra-surface border border-ultra-border text-white text-xl rounded-2xl pr-14 pl-14 py-6 focus:border-ultra-silver-muted outline-none transition-all shadow-ultra"
-                            />
+                            <form onSubmit={handleSearchSubmit} className="w-full">
+                                <div className="flex bg-ultra-bg-secondary border border-ultra-border overflow-hidden rounded-2xl w-full">
+                                    <input
+                                        type="text"
+                                        placeholder={t('search')}
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full bg-transparent border-none outline-none text-white px-4 py-3 text-sm placeholder:text-ultra-silver-muted"
+                                        autoFocus
+                                    />
+                                    <button type="submit" className="px-4 text-ultra-silver-muted hover:text-white transition-colors">
+                                        <Search size={20} />
+                                    </button>
+                                </div>
+                            </form>
                             <button
                                 onClick={() => setSearchOpen(false)}
                                 className="absolute left-4 p-2 text-ultra-silver-muted hover:text-white transition-colors bg-ultra-bg rounded-xl"

@@ -15,7 +15,29 @@ export const metadata: Metadata = {
     keywords: ['ultra', 'store', 'premium', 'luxury', 'shopping'],
     icons: {
         icon: '/top.svg',
-    }
+    },
+    openGraph: {
+        title: 'ألترا ستور | الوجهة الرقمية الأولى',
+        description: 'ألترا - وجهتك المميزة للمنتجات والخدمات الحصرية بأنسب الأسعار',
+        url: 'https://ultra-store1.vercel.app',
+        siteName: 'ألترا ستور',
+        images: [
+            {
+                url: '/imgs/logo/logo.png',
+                width: 800,
+                height: 600,
+                alt: 'شعار ألترا ستور',
+            },
+        ],
+        locale: 'ar_SA',
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'ألترا ستور | الوجهة الرقمية الأولى',
+        description: 'ألترا - وجهتك المميزة للمنتجات والخدمات الحصرية بأنسب الأسعار',
+        images: ['/imgs/logo/logo.png'],
+    },
 };
 
 export default function RootLayout({

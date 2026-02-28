@@ -11,6 +11,7 @@ import { useLoadingStore } from '@/stores/loading-store';
 import { useFavoritesStore } from '@/stores/favorites-store';
 import { Heart, Star, ShoppingCart } from 'lucide-react';
 import type { Product } from '@/lib/supabase/types';
+import { useTranslation } from '@/stores/dialect-store';
 
 interface ProductCardProps {
     product: Product;
@@ -25,6 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
     const router = useRouter();
     const setLoading = useLoadingStore((s) => s.setLoading);
     const isFavorite = favorites.includes(product.id);
+    const { t } = useTranslation();
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -141,9 +143,9 @@ export function ProductCard({ product }: ProductCardProps) {
                         onClick={handleAddToCart}
                         className="w-full flex items-center justify-center gap-1 sm:gap-2 bg-ultra-surface border border-ultra-border text-ultra-silver-bright font-bold py-1.5 sm:py-2 rounded-xl transition-all duration-ultra hover:bg-ultra-card hover:shadow-glow text-xs sm:text-sm"
                     >
-                        <ShoppingCart size={14} className="sm:w-4 sm:h-4" />
-                        <span className="hidden sm:inline">إضافة للسلة</span>
-                        <span className="sm:hidden">أضف</span>
+                        <ShoppingCart size={14} className="sm:w-4 sm:h-4 shrink-0" />
+                        <span className="hidden sm:inline">{t('add_to_cart')}</span>
+                        <span className="sm:hidden">{t('add_to_cart').split(' ')[0] || 'أضف'}</span>
                     </button>
                 </div>
             </div>

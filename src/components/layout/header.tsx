@@ -3,13 +3,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Menu, X, User, ShoppingBasket, Home, Gamepad2, Code, Palette, Dumbbell, Gift, Tag, LogIn, LogOut, LayoutDashboard, MessageCircle, Search, Heart } from 'lucide-react';
+import { Menu, X, User, ShoppingCart, Home, Gamepad2, Code, Palette, Dumbbell, Gift, Tag, LogIn, LogOut, LayoutDashboard, MessageCircle, Search, Heart } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 import { useChatStore } from '@/stores/chat-store';
 import { useFavoritesStore } from '@/stores/favorites-store';
 import { useTranslation } from '@/stores/dialect-store';
 import { useRouter } from 'next/navigation';
+
+import { useFavoritesModalStore } from '@/stores/favorites-modal-store';
 
 export function Header() {
     const { t } = useTranslation();
@@ -22,7 +24,6 @@ export function Header() {
         { href: '/category/design', label: 'تصاميم', icon: Palette },
         { href: '/category/sports', label: 'رياضة', icon: Dumbbell },
         { href: '/category/free', label: 'مجاني من ألترا', icon: Gift },
-        { href: '/offers', label: 'العروض', icon: Tag },
     ];
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -34,6 +35,7 @@ export function Header() {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const fetchFavorites = useFavoritesStore(s => s.fetchFavorites);
     const clearFavorites = useFavoritesStore(s => s.clearFavorites);
+    const openFavorites = useFavoritesModalStore(s => s.openModal);
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -112,9 +114,9 @@ export function Header() {
                     >
                         <Search size={20} />
                     </button>
-                    <Link href="/favorites" className="p-1.5 text-ultra-silver-muted hover:text-white transition-colors">
+                    <button onClick={openFavorites} className="p-1.5 text-ultra-silver-muted hover:text-white transition-colors" aria-label="المفضلة">
                         <Heart size={20} />
-                    </Link>
+                    </button>
                     {isAuthenticated && user?.role === 'admin' && (
                         <Link href="/admin" className="p-1.5 text-ultra-silver-muted hover:text-white transition-colors">
                             <LayoutDashboard size={20} />
@@ -149,13 +151,13 @@ export function Header() {
                             >
                                 <Search size={22} />
                             </button>
-                            <Link
-                                href="/favorites"
+                            <button
+                                onClick={openFavorites}
                                 className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
                                 title={t('favorites')}
                             >
                                 <Heart size={22} />
-                            </Link>
+                            </button>
                             {isAuthenticated && (
                                 <button
                                     onClick={openChat}
@@ -183,11 +185,9 @@ export function Header() {
                                 className="relative p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors duration-ultra"
                                 title={t('cart')}
                             >
-                                <ShoppingBasket size={20} />
+                                <ShoppingCart size={22} className="text-ultra-silver-muted group-hover:text-white transition-colors" />
                                 {isMounted && cartItemCount > 0 && (
-                                    <span className="absolute -top-0.5 -left-0.5 w-4 h-4 rounded-full bg-ultra-silver-bright text-ultra-bg text-[10px] font-bold flex items-center justify-center">
-                                        {cartItemCount}
-                                    </span>
+                                    <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-ultra-silver-bright border border-ultra-bg shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
                                 )}
                             </Link>
                         </div>
@@ -198,7 +198,7 @@ export function Header() {
             {/* Overlay */}
             {drawerOpen && (
                 <div
-                    className="fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300"
+                    className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-md transition-all duration-300"
                     onClick={() => setDrawerOpen(false)}
                 />
             )}
@@ -208,8 +208,11 @@ export function Header() {
                 className={`fixed top-0 right-0 z-[70] h-full w-72 bg-ultra-bg-secondary border-l border-ultra-border shadow-ultra transform transition-transform duration-300 ease-in-out ${drawerOpen ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >
-                <div className="flex items-center justify-between px-5 h-20 border-b border-ultra-border">
-                    <Image src="/imgs/logo/logo.png" alt="ULTRA" width={180} height={60} className="h-16 w-auto object-contain" />
+                <div className="flex items-center justify-between px-5 h-20 border-b border-ultra-border relative">
+                    <div className="absolute left-1/2 -translate-x-1/2">
+                        <Image src="/imgs/logo/logo.png" alt="ULTRA" width={140} height={40} className="h-10 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]" />
+                    </div>
+                    <div />
                     <button
                         onClick={() => setDrawerOpen(false)}
                         className="p-2 text-ultra-silver-muted hover:text-ultra-silver-bright transition-colors sm:hidden"

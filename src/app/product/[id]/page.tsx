@@ -11,10 +11,14 @@ import { useNotificationStore } from '@/stores/notification-store';
 import Image from 'next/image';
 import { Star, ShoppingCart, Heart, ArrowRight } from 'lucide-react';
 import type { Product } from '@/lib/supabase/types';
+import { ProductCard } from '@/components/ui/product-card';
+import { useRouter } from 'next/navigation';
 
 export default function ProductDetailPage() {
     const { id } = useParams();
+    const router = useRouter();
     const [product, setProduct] = useState<Product | null>(null);
+    const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
@@ -29,7 +33,16 @@ export default function ProductDetailPage() {
                 .select('*, category:categories(*)')
                 .eq('id', id)
                 .single();
-            if (data) setProduct(data);
+            if (data) {
+                setProduct(data);
+                const { data: related } = await supabase
+                    .from('products')
+                    .select('*, category:categories(*)')
+                    .eq('status', 'active')
+                    .neq('id', id)
+                    .limit(4);
+                if (related) setRelatedProducts(related);
+            }
             setLoading(false);
         }
         fetchProduct();
@@ -45,9 +58,20 @@ export default function ProductDetailPage() {
                 price: product.price,
                 image: product.image,
             });
-            addNotification('success', 'تم إضافة المنتج إلى السلة');
+            addNotification('cart', `تمت الإضافة: ${product.name}`, 3000);
             setIsAdding(false);
         }, 500);
+    };
+
+    const handleBuyNow = () => {
+        if (!product) return;
+        addItem({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+        });
+        router.push('/cart');
     };
 
     if (loading) {
@@ -95,7 +119,7 @@ export default function ProductDetailPage() {
                 </button>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-                    <div className="relative aspect-square bg-ultra-card border border-ultra-border rounded-ultra overflow-hidden">
+                    <div className="relative aspect-[2/3] bg-ultra-card border border-ultra-border rounded-ultra overflow-hidden">
                         <Image
                             src={product.image}
                             alt={product.name}
@@ -193,39 +217,48 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
-                {/* Mobile Sticky Bottom Bar */}
-                <div className="fixed bottom-0 left-0 right-0 z-40 bg-ultra-bg-secondary/95 backdrop-blur-md border-t border-ultra-border p-4 sm:hidden flex items-center justify-between gap-4 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.5)] animate-[slideUp_0.3s_ease]">
-                    <div className="flex flex-col max-w-[40%]">
-                        <span className="text-xs text-ultra-silver-muted line-clamp-1">{product.name}</span>
+                {/* Sticky Bottom Bar */}
+                <div className="fixed bottom-0 left-0 right-0 z-40 bg-ultra-bg-secondary/95 backdrop-blur-md border-t border-ultra-border p-3 sm:p-4 flex items-center justify-between gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] animate-[slideUp_0.3s_ease] pb-safe sm:pb-4">
+                    <div className="flex flex-col max-w-[30%] sm:max-w-[50%]">
+                        <span className="text-sm sm:text-base font-bold text-ultra-silver-bright line-clamp-1">{product.name}</span>
                         <div className="flex items-center gap-1">
-                            <span className="font-extrabold text-lg text-ultra-silver-bright">{product.price}</span>
-                            <Image src="/ryal.svg" alt="ريال" width={16} height={16} />
+                            <span className="font-extrabold text-sm sm:text-lg text-white">{product.price}</span>
+                            <Image src="/ryal.svg" alt="ريال" width={14} height={14} />
                         </div>
                     </div>
-                    <div className="flex gap-2 flex-1">
-                        <button
-                            onClick={() => setIsFavorite(!isFavorite)}
-                            className="w-12 h-12 shrink-0 rounded-xl bg-ultra-bg border border-ultra-border flex items-center justify-center transition-all duration-ultra hover:bg-ultra-surface"
-                        >
-                            <Heart
-                                size={18}
-                                className={isFavorite ? 'fill-ultra-silver-bright text-ultra-silver-bright' : 'text-ultra-silver-muted'}
-                            />
-                        </button>
+                    <div className="flex gap-2 sm:gap-4 flex-1 justify-end">
                         <button
                             onClick={handleAddToCart}
                             disabled={isAdding}
-                            className="flex-1 shrink-0 flex items-center justify-center gap-2 bg-ultra-silver-bright text-ultra-bg font-bold px-4 rounded-xl transition-all duration-ultra hover:bg-white shadow-glow disabled:opacity-50"
+                            className="flex-1 max-w-[150px] shrink-0 flex items-center justify-center gap-1 sm:gap-2 bg-ultra-surface border border-ultra-border text-ultra-silver-bright font-bold px-2 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-ultra hover:bg-ultra-card shadow-ultra disabled:opacity-50 text-xs sm:text-sm"
                         >
                             {isAdding ? (
-                                <div className="w-4 h-4 rounded-full border-t-2 border-ultra-bg animate-spin shrink-0"></div>
+                                <div className="w-4 h-4 rounded-full border-t-2 border-ultra-silver-bright animate-spin shrink-0"></div>
                             ) : (
-                                <ShoppingCart size={16} />
+                                <ShoppingCart size={16} className="hidden sm:block" />
                             )}
-                            {isAdding ? 'جاري الإضافة' : 'إضافة'}
+                            {isAdding ? 'جاري...' : 'أضف للسلة'}
+                        </button>
+                        <button
+                            onClick={handleBuyNow}
+                            className="flex-1 max-w-[150px] shrink-0 flex items-center justify-center gap-2 bg-ultra-silver-bright text-ultra-bg font-extrabold px-2 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-ultra hover:bg-white shadow-[0_0_15px_rgba(255,255,255,0.4)] text-xs sm:text-sm"
+                        >
+                            اشتري الآن
                         </button>
                     </div>
                 </div>
+
+                {/* Related Products */}
+                {relatedProducts.length > 0 && (
+                    <div className="mt-16 sm:mt-24">
+                        <h2 className="text-xl sm:text-2xl font-bold text-ultra-silver-bright mb-6">قد يعجبك أيضاً</h2>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                            {relatedProducts.map(p => (
+                                <ProductCard key={p.id} product={p} />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </main>
             <Footer />
             <SidebarChat />

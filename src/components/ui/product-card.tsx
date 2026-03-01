@@ -46,7 +46,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 price: product.price,
                 image: product.image,
             });
-            addNotification('success', 'تم إضافة المنتج إلى السلة');
+            addNotification('cart', `تمت الإضافة: ${product.name}`, 3000);
             setLoading(false);
         }, 500);
     };

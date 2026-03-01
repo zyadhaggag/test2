@@ -20,6 +20,14 @@ export function HomeContent({
     const [slides, setSlides] = useState<HeroSlide[]>(initialSlides);
     const [products, setProducts] = useState<Product[]>(initialProducts);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Affiliate Form State
+    const [affFullname, setAffFullname] = useState('');
+    const [affPhone, setAffPhone] = useState('');
+    const [affLinks, setAffLinks] = useState('');
+    const [isAffSubmitting, setIsAffSubmitting] = useState(false);
+    const [affSuccess, setAffSuccess] = useState(false);
+
     const testimonialsRef = useRef<HTMLDivElement>(null);
     const isTestimonialsHovered = useRef(false);
 
@@ -95,32 +103,32 @@ export function HomeContent({
             </section>
 
             {/* Why Choose Us */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10 py-10">
-                <div className="text-center space-y-4">
-                    <h2 className=" font-bold text-3xl sm:text-4xl text-ultra-silver-bright">لماذا تختار <span className="text-transparent bg-clip-text bg-gradient-to-r from-ultra-silver-muted to-white">ألترا</span>؟</h2>
-                    <p className="text-ultra-silver-muted max-w-2xl mx-auto text-lg">نحن نقدم أفضل المنتجات والخدمات الرقمية بأعلى جودة لضمان نجاح أعمالك</p>
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 py-10 my-10 border-y border-ultra-border/30 bg-black/20">
+                <div className="text-center space-y-2">
+                    <h2 className="font-black text-2xl sm:text-3xl text-ultra-silver-bright drop-shadow-md">ألترا ستور</h2>
+                    <p className="text-ultra-silver-muted text-sm pb-4">تنبيه بسيط:</p>
                 </div>
-                <div className="flex flex-col sm:flex-row justify-center items-center sm:items-start gap-12 sm:gap-20 pb-8 text-center" dir="rtl">
-                    <div className="flex flex-col items-center group relative w-full sm:w-1/3">
-                        <div className="relative w-20 h-20 mb-6 bg-ultra-surface rounded-2xl flex items-center justify-center border border-ultra-border group-hover:border-ultra-silver-muted/50 transition-colors shadow-ultra">
-                            <Zap className="text-ultra-silver-bright group-hover:scale-110 transition-transform duration-ultra" size={32} />
+                <div className="flex flex-row justify-around items-center gap-2 sm:gap-10 pb-4 text-center" dir="rtl">
+                    <div className="flex flex-col items-center group relative w-1/3">
+                        <div className="mb-3 text-ultra-silver-bright group-hover:text-white transition-colors group-hover:scale-110 duration-ultra drop-shadow-glow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /></svg>
                         </div>
-                        <h3 className="font-bold text-xl text-ultra-silver-bright mb-3 group-hover:text-white transition-colors">سرعة الإنجاز</h3>
-                        <p className="text-ultra-silver-muted text-sm leading-relaxed max-w-[250px]">تنفيذ سريع لجميع طلباتك مع الحفاظ على أعلى معايير الجودة والإتقان.</p>
+                        <h3 className="font-bold text-sm sm:text-lg text-ultra-silver-bright mb-1 group-hover:text-white transition-colors">9,977 +</h3>
+                        <p className="text-ultra-silver-muted text-[10px] sm:text-sm">عميل حقيقي!</p>
                     </div>
-                    <div className="flex flex-col items-center group relative w-full sm:w-1/3">
-                        <div className="relative w-20 h-20 mb-6 bg-ultra-surface rounded-2xl flex items-center justify-center border border-ultra-border group-hover:border-ultra-silver-muted/50 transition-colors shadow-ultra">
-                            <Shield className="text-ultra-silver-bright group-hover:scale-110 transition-transform duration-ultra" size={32} />
+                    <div className="flex flex-col items-center group relative w-1/3">
+                        <div className="mb-3 text-ultra-silver-bright group-hover:text-white transition-colors group-hover:scale-110 duration-ultra drop-shadow-glow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>
                         </div>
-                        <h3 className="font-bold text-xl text-ultra-silver-bright mb-3 group-hover:text-white transition-colors">جودة وضمان</h3>
-                        <p className="text-ultra-silver-muted text-sm leading-relaxed max-w-[250px]">نضمن لك الحصول على منتجات برمجية وتصاميم خالية من الأخطاء بكفاءة عالية.</p>
+                        <h3 className="font-bold text-sm sm:text-lg text-ultra-silver-bright mb-1 group-hover:text-white transition-colors">رأيك يهمنا &lt;3</h3>
+                        <p className="text-ultra-silver-muted text-[10px] sm:text-sm">منجد رأيك يهمنا</p>
                     </div>
-                    <div className="flex flex-col items-center group relative w-full sm:w-1/3">
-                        <div className="relative w-20 h-20 mb-6 bg-ultra-surface rounded-2xl flex items-center justify-center border border-ultra-border group-hover:border-ultra-silver-muted/50 transition-colors shadow-ultra">
-                            <Headphones className="text-ultra-silver-bright group-hover:scale-110 transition-transform duration-ultra" size={32} />
+                    <div className="flex flex-col items-center group relative w-1/3">
+                        <div className="mb-3 text-ultra-silver-bright group-hover:text-white transition-colors group-hover:scale-110 duration-ultra drop-shadow-glow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2z" /><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" /></svg>
                         </div>
-                        <h3 className="font-bold text-xl text-ultra-silver-bright mb-3 group-hover:text-white transition-colors">دعم متواصل</h3>
-                        <p className="text-ultra-silver-muted text-sm leading-relaxed max-w-[250px]">فريق دعم فني لخدمتك في أي وقت، متواجد دائماً للإجابة على استفساراتك.</p>
+                        <h3 className="font-bold text-sm sm:text-lg text-ultra-silver-bright mb-1 group-hover:text-white transition-colors">حاضرين دايم</h3>
+                        <p className="text-ultra-silver-muted text-[10px] sm:text-sm">24 ساعة موجودين!</p>
                     </div>
                 </div>
             </section>
@@ -172,31 +180,56 @@ export function HomeContent({
             {/* Ads Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-[fadeIn_0.3s_ease]">
-                    <div className="bg-ultra-card border border-ultra-border rounded-2xl w-full max-w-lg p-4 sm:p-6 relative shadow-ultra">
-                        <button onClick={() => setIsModalOpen(false)} className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 text-ultra-silver-muted hover:text-white transition-colors bg-ultra-surface rounded-full hover:bg-ultra-border">
+                    <div className="bg-ultra-card border border-ultra-border rounded-2xl w-full max-w-lg p-6 relative shadow-ultra">
+                        <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 p-2 text-ultra-silver-muted hover:text-white transition-colors bg-ultra-surface rounded-full hover:bg-ultra-border">
                             <X size={20} />
                         </button>
                         <div className="text-center mb-6">
                             <h2 className="text-2xl font-bold text-white mb-2">انضم كمسوق ألترا</h2>
                             <p className="text-ultra-silver-muted text-sm">سجل بياناتك وسيتم التواصل معك لبدء رحلتك كشريك نجاح</p>
                         </div>
-                        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); }}>
-                            <div>
-                                <label className="block text-sm text-ultra-silver-muted mb-1 font-bold">الاسم الكامل</label>
-                                <input type="text" required className="w-full bg-ultra-surface border border-ultra-border rounded-xl px-4 py-2.5 sm:py-3 text-white focus:border-ultra-silver-dark outline-none transition-colors text-sm" placeholder="الاسم ثلاثي" />
+
+                        {affSuccess ? (
+                            <div className="text-center py-6">
+                                <div className="w-16 h-16 bg-ultra-surface border border-ultra-border text-ultra-silver-bright rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                </div>
+                                <h3 className="text-xl font-bold text-white mb-2">شكراً لك!</h3>
+                                <p className="text-ultra-silver-muted">تم إرسال طلبك بنجاح. سيتواصل معك فريق ألترا قريباً.</p>
+                                <button onClick={() => setIsModalOpen(false)} className="mt-6 px-6 py-2 bg-ultra-surface border border-ultra-border text-white rounded-xl hover:bg-ultra-border transition-colors">
+                                    إغلاق
+                                </button>
                             </div>
-                            <div>
-                                <label className="block text-sm text-ultra-silver-muted mb-1 font-bold">رقم الواتساب</label>
-                                <input type="tel" required className="w-full bg-ultra-surface border border-ultra-border rounded-xl px-4 py-2.5 sm:py-3 text-white outline-none transition-colors text-left font-mono text-sm" dir="ltr" placeholder="+966 ..." />
-                            </div>
-                            <div>
-                                <label className="block text-sm text-ultra-silver-muted mb-1 font-bold">حساباتك وقنواتك (إن وجد)</label>
-                                <textarea rows={3} className="w-full bg-ultra-surface border border-ultra-border rounded-xl px-4 py-3 text-white outline-none transition-colors" placeholder="رابط تيك توك، انستقرام، وغيرها..."></textarea>
-                            </div>
-                            <button className="w-full bg-ultra-silver-bright text-ultra-bg font-extrabold py-3.5 rounded-xl hover:bg-white transition-colors shadow-glow mt-4">
-                                إرسال الطلب
-                            </button>
-                        </form>
+                        ) : (
+                            <form className="space-y-4" onSubmit={async (e) => {
+                                e.preventDefault();
+                                setIsAffSubmitting(true);
+                                const supabase = createClient();
+                                await supabase.from('affiliates').insert([{
+                                    full_name: affFullname,
+                                    phone: affPhone,
+                                    links: affLinks
+                                }]);
+                                setIsAffSubmitting(false);
+                                setAffSuccess(true);
+                            }}>
+                                <div>
+                                    <label className="block text-sm text-ultra-silver-muted mb-1 font-bold">الاسم الكامل</label>
+                                    <input type="text" required value={affFullname} onChange={e => setAffFullname(e.target.value)} className="w-full bg-ultra-surface border border-ultra-border rounded-xl px-4 py-3 text-white focus:border-ultra-silver-bright outline-none transition-colors text-sm" placeholder="الاسم ثلاثي" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-ultra-silver-muted mb-1 font-bold">رقم الواتساب</label>
+                                    <input type="tel" required value={affPhone} onChange={e => setAffPhone(e.target.value)} className="w-full bg-ultra-surface border border-ultra-border rounded-xl px-4 py-3 text-white focus:border-ultra-silver-bright outline-none transition-colors text-left font-mono text-sm" dir="ltr" placeholder="+966 ..." />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-ultra-silver-muted mb-1 font-bold">حساباتك وقنواتك (إن وجد)</label>
+                                    <textarea rows={3} value={affLinks} onChange={e => setAffLinks(e.target.value)} className="w-full bg-ultra-surface border border-ultra-border rounded-xl px-4 py-3 text-white focus:border-ultra-silver-bright outline-none transition-colors" placeholder="رابط تيك توك، انستقرام، وغيرها..."></textarea>
+                                </div>
+                                <button disabled={isAffSubmitting} type="submit" className="w-full bg-ultra-silver-bright text-ultra-bg font-extrabold py-3.5 rounded-xl hover:bg-white transition-colors shadow-glow mt-4 flex items-center justify-center">
+                                    {isAffSubmitting ? <div className="w-5 h-5 border-t-2 border-ultra-bg border-solid rounded-full animate-spin"></div> : "إرسال الطلب"}
+                                </button>
+                            </form>
+                        )}
                     </div>
                 </div>
             )}

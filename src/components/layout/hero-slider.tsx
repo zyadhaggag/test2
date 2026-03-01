@@ -38,7 +38,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
                                 src={slide.image}
                                 alt={`Slide ${index + 1}`}
                                 fill
-                                className="object-contain sm:object-cover"
+                                className="object-cover w-full h-full"
                                 priority={index === 0}
                             />
                         </Link>

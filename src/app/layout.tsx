@@ -5,6 +5,8 @@ import { GlobalLoading } from '@/components/ui/global-loading';
 import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav';
 import { SidebarChat } from '@/components/layout/sidebar-chat';
 import { ScrollToTop } from '@/components/layout/scroll-to-top';
+import { SplashScreen } from '@/components/ui/splash-screen';
+import { FavoritesModal } from '@/components/ui/favorites-modal';
 
 export const metadata: Metadata = {
     title: {
@@ -48,9 +50,11 @@ export default function RootLayout({
     return (
         <html lang="ar" dir="rtl">
             <body className="font-tajawal bg-ultra-bg text-ultra-silver min-h-screen">
+                <SplashScreen />
                 <ScrollToTop />
                 <GlobalLoading />
                 <NotificationProvider />
+                <FavoritesModal />
                 <SidebarChat />
                 {children}
                 <MobileBottomNav />

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Grid, ShoppingBasket, User, LayoutDashboard } from 'lucide-react';
+import { Home, Grid, ShoppingCart, User, LayoutDashboard } from 'lucide-react';
 import { useCartStore } from '@/stores/cart-store';
 import { useAuthStore } from '@/stores/auth-store';
 import { useTranslation } from '@/stores/dialect-store';
@@ -39,10 +39,10 @@ export function MobileBottomNav() {
         },
         {
             href: '/cart',
-            icon: ShoppingBasket,
+            icon: ShoppingCart,
             label: t('cart'),
             isActive: pathname === '/cart',
-            badge: isMounted && cartItemCount > 0 ? cartItemCount : null
+            badge: isMounted && cartItemCount > 0 ? true : false
         },
         {
             href: isAuthenticated ? '/profile' : '/auth/login',
@@ -72,9 +72,7 @@ export function MobileBottomNav() {
                         <span className="text-[10px] font-medium">{item.label}</span>
 
                         {item.badge && (
-                            <span className="absolute top-2 right-1/4 w-4 h-4 rounded-full bg-ultra-silver-bright text-ultra-bg text-[10px] font-bold flex items-center justify-center animate-pulse">
-                                {item.badge}
-                            </span>
+                            <span className="absolute top-2 right-1/4 w-2 h-2 rounded-full bg-ultra-silver-bright border border-ultra-bg shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
                         )}
                     </Link>
                 ))}

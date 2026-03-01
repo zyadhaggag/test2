@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type NotificationType = 'success' | 'error' | 'warning' | 'info';
+export type NotificationType = 'success' | 'error' | 'warning' | 'info' | 'cart';
 
 export interface Notification {
     id: string;

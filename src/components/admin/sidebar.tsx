@@ -16,6 +16,7 @@ import {
     ArrowRight,
     ChevronRight,
     ChevronLeft,
+    Megaphone,
 } from 'lucide-react';
 
 const menuItems = [
@@ -27,6 +28,7 @@ const menuItems = [
     { href: '/admin/orders', label: 'الطلبات', icon: ShoppingBag },
     { href: '/admin/users', label: 'المستخدمين', icon: Users },
     { href: '/admin/chat', label: 'المحادثات', icon: MessageCircle },
+    { href: '/admin/affiliates', label: 'طلبات التسويق', icon: Megaphone },
 ];
 
 export function AdminSidebar() {
